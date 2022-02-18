@@ -8,8 +8,8 @@ class BrightnessProvider with ChangeNotifier {
     brightness = defaultBrightness;
   }
 
-  setBrightness(Brightness b) {
-    brightness = b;
+  setBrightness(bool b) {
+    brightness = b ? Brightness.light : Brightness.dark;
     notifyListeners();
   }
 }

@@ -23,11 +23,6 @@ class PieChartApp extends StatelessWidget {
           theme: ThemeData(
             brightness: notifier.brightness,
           ),
-
-          // theme: ChangeNotifierProvider<BrightnessProvider>(
-          //   create: (_) => BrightnessProvider,
-          //   child: ThemeData(),
-          // ),
         ),
       ),
     );
@@ -51,6 +46,14 @@ class PieHomePage extends StatelessWidget {
           title: Text('Flutter Lovers Meter'),
           centerTitle: true,
           elevation: 0.0,
+          actions: [
+            Consumer<BrightnessProvider>(
+              builder: (_, notifier, w) => Switch(
+                value: notifier.brightness == Brightness.light ? true : false,
+                onChanged: notifier.setBrightness,
+              ),
+            ),
+          ],
         ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
