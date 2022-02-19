@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:pie_chart_provider/config/palette.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/pie_provider.dart';
 import '../../../providers/brightness_provider.dart';
 import '../widgets/widgets.dart';
+import 'drawer.dart';
 
 class PieHomePage extends StatelessWidget {
   const PieHomePage({
@@ -31,67 +33,80 @@ class PieHomePage extends StatelessWidget {
             ),
           ],
         ),
-        body: Column(
+        body: ScaffoldBody(),
+        drawer: MainDrawer(),
+      ),
+    );
+  }
+}
+
+class ScaffoldBody extends StatelessWidget {
+  const ScaffoldBody({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Consumer<PieProvider>(
-                  builder: (ctx, notifier, widget) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                    ),
-                    child: PieChart(
-                      chartValuesOptions: ChartValuesOptions(),
-                      legendOptions:
-                          LegendOptions(legendPosition: LegendPosition.bottom),
-                      dataMap: <String, double>{
-                        'flutter lovers': notifier.flutterVal!,
-                        'haters': notifier.hatersVal!,
-                      },
-                      colorList: [
-                        Colors.blue,
-                        Colors.red,
-                      ],
-                    ),
-                  ),
+            Consumer<PieProvider>(
+              builder: (ctx, notifier, widget) => Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
                 ),
-                SizedBox(
-                  height: 70,
+                child: PieChart(
+                  chartValuesOptions: ChartValuesOptions(),
+                  legendOptions:
+                      LegendOptions(legendPosition: LegendPosition.bottom),
+                  dataMap: <String, double>{
+                    'flutter lovers': notifier.flutterVal!,
+                    'haters': notifier.hatersVal!,
+                  },
+                  colorList: [
+                    Palette.flutterColor,
+                    Palette.hatersColor,
+                  ],
                 ),
-                Consumer<PieProvider>(
-                  builder: (_, notifier, widget) => SliderChart(
-                    traylingText: '😍',
-                    pieProvider: notifier,
-                    value: notifier.flutterVal!,
-                    onChange: (val) {
-                      notifier.setFlutterVal(val);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Consumer<PieProvider>(
-                  builder: (_, notifier, widget) => SliderChart(
-                    traylingText: '😕',
-                    value: notifier.hatersVal!,
-                    pieProvider: notifier,
-                    color: Colors.red,
-                    onChange: (val) {
-                      notifier.setHatersVal(val);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-            RightsFooter(),
+            SizedBox(
+              height: 70,
+            ),
+            Consumer<PieProvider>(
+              builder: (_, notifier, widget) => SliderChart(
+                traylingText: '😍',
+                pieProvider: notifier,
+                color: Palette.flutterColor,
+                value: notifier.flutterVal!,
+                onChange: (val) {
+                  notifier.setFlutterVal(val);
+                },
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Consumer<PieProvider>(
+              builder: (_, notifier, widget) => SliderChart(
+                traylingText: '😕',
+                value: notifier.hatersVal!,
+                pieProvider: notifier,
+                color: Palette.hatersColor,
+                onChange: (val) {
+                  notifier.setHatersVal(val);
+                },
+              ),
+            ),
           ],
         ),
-      ),
+        RightsFooter(),
+      ],
     );
   }
 }
